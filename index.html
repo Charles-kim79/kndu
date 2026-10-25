@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex,nofollow">
+<title>AI 업무 해결 키트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@700&display=swap">
+<style>
+/* Layout: 제목 → 처음이신 분 안내 → 카테고리 탭 3개 → 과업 카드(결론 → 직접 해보기 → 왜 되나 → 한 걸음 더). 공문서 느낌의 세리프 제목 + 데이터용 모노 */
+:root{
+  --bg:#edefe9; --surface:#fafaf6; --ink:#1c2420; --muted:#5a655e; --line:#d3d8cd;
+  --accent:#2c5b4b; --accent-ink:#ffffff; --accent-soft:#dbe9e1;
+  --warn:#a85d00; --warn-soft:#f6e6cf; --bad:#b3261e; --bad-soft:#f7dcd9; --ok:#2a7a4b; --ok-soft:#d8eddf;
+  --font-body:"Noto Sans KR","Malgun Gothic","맑은 고딕","Apple SD Gothic Neo",sans-serif;
+  --font-display:"Noto Serif KR","Batang","바탕",serif;
+  --font-mono:"IBM Plex Mono","D2Coding",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101614; --surface:#18201d; --ink:#e4eae5; --muted:#9aa89f; --line:#2c3833;
+  --accent:#7cc7a6; --accent-ink:#0d1a14; --accent-soft:#1f3329;
+  --warn:#e6a34a; --warn-soft:#3a2c14; --bad:#f08a82; --bad-soft:#3c1f1d; --ok:#74cf97; --ok-soft:#1b3326; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101614; --surface:#18201d; --ink:#e4eae5; --muted:#9aa89f; --line:#2c3833;
+  --accent:#7cc7a6; --accent-ink:#0d1a14; --accent-soft:#1f3329;
+  --warn:#e6a34a; --warn-soft:#3a2c14; --bad:#f08a82; --bad-soft:#3c1f1d; --ok:#74cf97; --ok-soft:#1b3326; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.65;
+  padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+h1,h2,h3{margin:0;text-wrap:balance}
+h1{font-family:var(--font-display);font-size:clamp(26px,4.4vw,36px);line-height:1.2}
+h2{font-family:var(--font-display);font-size:clamp(18px,2.6vw,22px);line-height:1.3}
+h3{font-size:13px;letter-spacing:.03em}
+p{margin:0}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.head{display:flex;flex-direction:column;gap:8px}
+.head .sub{color:var(--muted);max-width:62ch}
+
+.guide{border:1px solid var(--line);border-left:4px solid var(--accent);background:var(--surface);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.guide ol{margin:0;padding-left:20px;display:grid;gap:4px}
+.guide h2{font-size:17px}
+
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.tabs a{display:flex;flex-direction:column;padding:10px 16px 9px;text-decoration:none;color:var(--muted);border:1px solid transparent;border-bottom:none;border-radius:6px 6px 0 0;min-width:0}
+.tabs a b{font-size:14px;font-weight:700;color:inherit}
+.tabs a span{font-family:var(--font-mono);font-size:11px}
+.tabs a[aria-selected="true"]{background:var(--surface);color:var(--ink);border-color:var(--line);position:relative;top:1px}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+section.panel{display:none;flex-direction:column;gap:18px}
+section.panel.on{display:flex}
+
+.task{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:clamp(14px,3vw,22px);display:flex;flex-direction:column;gap:16px;min-width:0}
+.th{display:flex;flex-direction:column;gap:6px}
+.badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{font-family:var(--font-mono);font-size:11.5px;padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);width:fit-content}
+.badge.alt{background:var(--warn-soft);color:var(--warn)}
+.problem{color:var(--muted)}
+.problem b{color:var(--ink);margin-right:6px}
+.lead{background:var(--accent-soft);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.lead h3{color:var(--accent)}
+.try{display:flex;flex-direction:column;gap:14px}
+.try>h3,.why>h3{color:var(--muted)}
+.why{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:12px}
+.why ul{margin:0;padding-left:18px;display:grid;gap:3px}
+.sub-step{display:flex;flex-direction:column;gap:8px;padding:12px;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
+.sub-step>h3{font-family:var(--font-mono);color:var(--accent)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.grow{flex:1 1 auto}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.chip{font-family:var(--font-mono);font-size:12px;padding:3px 9px;border:1px solid var(--line);border-radius:99px;background:var(--surface);color:var(--muted);white-space:nowrap}
+.chip.hit{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.chip.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.chip.bad{background:var(--bad-soft);color:var(--bad);border-color:transparent}
+button,select,input[type=text],textarea{font:inherit;color:var(--ink)}
+.btn{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:7px 14px;cursor:pointer;min-height:38px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
+.btn.sm{padding:3px 10px;min-height:32px;font-size:13px}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:700}
+select,input[type=text],textarea{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:7px 9px;min-width:0;max-width:100%}
+textarea{width:100%;font-family:var(--font-mono);font-size:12.5px;line-height:1.5;resize:vertical}
+input[type=range]{width:160px;max-width:100%}
+label.f{display:grid;gap:4px;font-size:13.5px}
+label.f>span{color:var(--muted)}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.fields .wide{grid-column:1/-1}
+details{border:1px solid var(--line);border-radius:6px;padding:8px 12px;background:var(--bg)}
+details summary{cursor:pointer;font-weight:500}
+details[open] summary{margin-bottom:8px}
+details>div{display:flex;flex-direction:column;gap:8px}
+pre{margin:0;font-family:var(--font-mono);font-size:12.5px;line-height:1.6;white-space:pre-wrap;word-break:break-word;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.qcard{border:1px solid var(--line);border-radius:6px;padding:10px 12px;background:var(--surface);display:flex;flex-direction:column;gap:8px;min-width:0}
+.qcard.done.ok{border-color:var(--ok)} .qcard.done.no{border-color:var(--bad)}
+.res{font-size:13px;padding:5px 9px;border-radius:5px}
+.res.ok{background:var(--ok-soft);color:var(--ok)} .res.no{background:var(--bad-soft);color:var(--bad)}
+
+.doc{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;line-height:2}
+.s{font:inherit;cursor:pointer;border-radius:3px;padding:1px 3px;border:0;background:none;text-align:left;display:inline;text-decoration:underline dotted var(--line);text-underline-offset:5px;color:var(--ink)}
+.s:hover{background:var(--accent-soft)}
+.s.flag{background:var(--warn-soft);outline:1.5px solid var(--warn)}
+.s.hit{background:var(--ok-soft);outline:1.5px solid var(--ok)}
+.s.miss{background:var(--bad-soft);outline:1.5px dashed var(--bad)}
+.s.fp{background:var(--warn-soft);outline:1.5px dashed var(--warn);text-decoration:line-through}
+.why-s{display:block;font-size:13px;background:var(--bg);border-left:3px solid var(--bad);padding:3px 10px;margin:0 0 4px;line-height:1.55}
+.why-s.okc{border-left-color:var(--ok)}
+.hints{display:grid;gap:5px;font-size:13.5px;margin:0;padding:0;list-style:none}
+.hints li{background:var(--warn-soft);color:var(--ink);padding:5px 10px;border-radius:5px}
+.srcbox{display:grid;grid-template-columns:auto 1fr;gap:3px 14px;font-size:13.5px;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:8px 12px;margin:0}
+.srcbox dt{color:var(--muted)} .srcbox dd{margin:0}
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.pair .doc{display:block;line-height:2.2}
+.pair h3{color:var(--muted);font-family:var(--font-mono)}
+
+.chk{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.chk label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+.chk input{margin-top:5px}
+.chk input:checked+span{color:var(--muted);text-decoration:line-through}
+.mock{border:1px dashed var(--line);border-radius:6px;padding:10px 12px;background:var(--surface);display:grid;gap:4px;font-size:13.5px}
+.mock .tagm{font-family:var(--font-mono);font-size:11.5px;color:var(--muted)}
+
+.scroll{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border-bottom:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top;white-space:nowrap}
+th{font-family:var(--font-mono);font-size:11.5px;font-weight:500;color:var(--muted)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.mono{font-family:var(--font-mono)}
+td.chg{background:var(--warn-soft);color:var(--warn);font-weight:500}
+td.na{background:var(--bad-soft);color:var(--bad)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}
+.stats{display:flex;flex-wrap:wrap;gap:8px}
+.bars{display:grid;gap:6px;font-size:13.5px}
+.bar{display:grid;grid-template-columns:minmax(70px,110px) minmax(0,1fr) auto;gap:10px;align-items:center}
+.bar i{display:block;height:16px;background:var(--accent);border-radius:2px;min-width:2px}
+.bar .v{font-family:var(--font-mono);font-size:12.5px;white-space:nowrap}
+.bar .l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.toggles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:6px 14px}
+.toggles label{display:flex;gap:8px;align-items:flex-start;font-size:14px;cursor:pointer}
+.toggles input{margin-top:5px}
+
+.days{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.day{border:1px solid var(--line);border-radius:6px;padding:10px 12px;background:var(--surface);display:grid;gap:4px;min-width:0}
+.day.hot{border-color:var(--warn);background:var(--warn-soft)}
+.day .big{font-family:var(--font-mono);font-size:26px;line-height:1.1}
+.alerts{display:grid;gap:8px}
+.alert{border-left:4px solid var(--warn);background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:6px;padding:8px 12px;font-size:14px}
+
+.foot{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+@media (prefers-reduced-motion:no-preference){.bar i{transition:width .3s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="head">
+  <div class="eyebrow">국방대학교 직무연수 · 4차 산업혁명과 IT활용능력</div>
+  <h1>AI 업무 해결 키트</h1>
+  <p class="sub">프롬프트(AI에게 하는 지시문) 한 줄로 업무 문제를 푸는 5가지 실습입니다.</p>
+</header>
+
+<aside class="guide">
+  <h2>처음이신 분은 여기부터</h2>
+  <ol>
+    <li><a href="https://gemini.google.com/" target="_blank" rel="noopener">gemini.google.com</a>에 접속해 구글 계정으로 로그인하세요. 계정이 없으면 구글에서 만들 수 있습니다.</li>
+    <li>아래 탭에서 실습을 고르고, 위에서부터 차례로 따라 하세요.</li>
+    <li>모든 실습은 <b>복사 → 붙여넣기 → 결과 보기</b> 세 동작입니다. 막히면 "이런 결과가 나옵니다" 예시를 보세요.</li>
+  </ol>
+</aside>
+
+<nav class="tabs" role="tablist" aria-label="실습 분류">
+  <a href="#verify" role="tab" data-tab="verify"><b>1. AI 이해와 검증</b><span>믿어도 되는지 확인</span></a>
+  <a href="#prompt" role="tab" data-tab="prompt"><b>2. 프롬프트</b><span>문제를 한 줄로</span></a>
+  <a href="#auto" role="tab" data-tab="auto"><b>3. 업무 자동화</b><span>연결하고 맡기기</span></a>
+</nav>
+
+<!-- ===== 1. 검증 ===== -->
+<section class="panel" id="p-verify" role="tabpanel">
+  <article class="task" id="t1">
+    <div class="th">
+      <div class="badges"><span class="badge">필수</span></div>
+      <h2>AI 보고서 오류 검수하기</h2>
+      <p class="problem"><b>해소되는 문제</b>AI가 쓴 글에 틀린 숫자나 치우친 표현이 섞여 있어도 모르고 넘어갑니다.</p>
+    </div>
+
+    <div class="lead">
+      <h3>결론 · 이 프롬프트 한 줄이면 됩니다</h3>
+      <pre id="pr1">아래 글의 숫자, 날짜, 근거를 하나씩 뽑아서 검증표(항목 / 글의 내용 / 확인 방법)로 만들어 줘. 확인할 수 없는 내용은 '확인 불가'라고 표시해 줘.</pre>
+      <div class="row"><button class="btn sm" type="button" data-copy="#pr1">복사</button><span class="small muted" data-note></span></div>
+    </div>
+
+    <div class="try">
+      <h3>직접 해보기</h3>
+
+      <div class="sub-step">
+        <h3>1 / 3 · AI에 넣어도 되는 자료일까요?</h3>
+        <div class="cards" id="cards"></div>
+        <div class="row"><span class="chip" id="card-score">0 / 5 맞힘</span></div>
+      </div>
+
+      <div class="sub-step">
+        <h3>2 / 3 · AI가 쓴 글에서 틀린 문장 2개를 찾으세요</h3>
+        <p class="small muted">틀렸다고 생각하는 문장을 누르고 「채점」을 누르세요. 막히면 힌트를 순서대로 보세요.</p>
+        <div class="doc" id="doc"></div>
+        <ul class="hints" id="hints"></ul>
+        <div class="row">
+          <button class="btn" id="hint-btn" type="button">힌트 보기</button>
+          <button class="btn primary" id="g-submit" type="button">채점</button>
+          <button class="btn" id="g-reset" type="button">다시 하기</button>
+          <span class="chip" id="g-result" hidden></span>
+        </div>
+      </div>
+
+      <div class="sub-step">
+        <h3>3 / 3 · 같은 요청인데 결과가 다릅니다. 치우친 표현을 찾으세요</h3>
+        <p class="small muted">요청: "우수 직원 추천서를 한 문단으로 써 줘. (이름: 김민수 / 김민지)" · 성별에 따라 달라진 표현을 모두 누르고 「확인」을 누르세요.</p>
+        <div class="pair" id="bias"></div>
+        <div class="row"><button class="btn primary" id="b-submit" type="button">확인</button><button class="btn" id="b-reset" type="button">다시 하기</button><span class="chip" id="b-result" hidden></span></div>
+        <div id="b-fix" hidden>
+          <p class="small" style="margin-bottom:6px"><b>고치는 프롬프트</b> 이 한 줄을 덧붙이면 줄어듭니다.</p>
+          <pre id="pr1b">성별, 나이 같은 인적 속성과 무관하게, 업무 성과와 구체적인 근거 중심으로 써 줘.</pre>
+          <div class="row" style="margin-top:6px"><button class="btn sm" type="button" data-copy="#pr1b">복사</button><span class="small muted" data-note></span></div>
+        </div>
+      </div>
+
+      <p class="small"><b>팁</b> 중요한 내용은 같은 질문을 <b>Gemini와 ChatGPT 둘 다에</b> 물어보세요. 답이 다르면 그 부분이 의심 지점입니다.</p>
+    </div>
+
+    <div class="why">
+      <h3>왜 되나요</h3>
+      <ul>
+        <li><b>원인</b> AI는 "그럴듯한 다음 말"을 만들어 내는 도구라서, 사실이 아니어도 같은 말투로 씁니다. 학습한 자료의 치우침도 그대로 따라 합니다.</li>
+        <li><b>해소</b> 검증표를 요구하면 AI가 확인할 항목을 먼저 뽑아 줍니다. 최종 확인은 사람이 합니다.</li>
+      </ul>
+    </div>
+    <details><summary>한 걸음 더</summary><div>
+      <p class="small">검증표를 받은 뒤 "확인 불가 항목만 다시 추려서, 어디서 확인하면 되는지 알려 줘"라고 이어서 요청해 보세요.</p>
+    </div></details>
+  </article>
+</section>
+
+<!-- ===== 2. 프롬프트 ===== -->
+<section class="panel" id="p-prompt" role="tabpanel">
+  <article class="task" id="t2">
+    <div class="th">
+      <div class="badges"><span class="badge">시연</span></div>
+      <h2>빈 화면에서 기획서까지</h2>
+      <p class="problem"><b>해소되는 문제</b>무엇을 어떻게 시켜야 할지 몰라 첫 문장에서 막힙니다.</p>
+    </div>
+    <div class="lead">
+      <h3>결론 · 칸만 채우면 이런 프롬프트가 완성됩니다</h3>
+      <pre id="pr2"></pre>
+      <div class="row"><button class="btn primary sm" type="button" data-copy="#pr2">복사</button><a class="btn sm" style="text-decoration:none;color:inherit" href="https://gemini.google.com/" target="_blank" rel="noopener">Gemini 열기</a><span class="small muted" data-note></span></div>
+    </div>
+    <div class="try">
+      <h3>직접 해보기</h3>
+      <div class="fields">
+        <label class="f wide"><span>주제 (무엇을 만들까요)</span><input type="text" id="pl-topic" value="AI@Home 소개 기획서"></label>
+        <label class="f"><span>역할 (AI는 누구인가요)</span><select id="pl-role"><option>기획 전문가</option><option>보고서 작성 전문가</option><option>강의자료 기획 전문가</option></select></label>
+        <label class="f"><span>슬라이드 수</span><select id="pl-n"><option>6</option><option selected>8</option><option>10</option></select></label>
+        <label class="f wide"><span>상황 (누가, 어디서 쓰나요)</span><input type="text" id="pl-ctx" value="국방 분야 직원 대상 발표용. 전문용어는 쉽게 풀어서 설명."></label>
+      </div>
+      <div class="toggles">
+        <label><input type="checkbox" id="pl-f1" checked><span>각 슬라이드: 제목 + 핵심 문장 3~4개</span></label>
+        <label><input type="checkbox" id="pl-f2" checked><span>마지막에 1페이지 요약 포함</span></label>
+        <label><input type="checkbox" id="pl-f3"><span>발표자가 말할 대본도 한 줄씩</span></label>
+      </div>
+      <div class="row" id="pl-chips"></div>
+      <p class="small muted">결과가 나오면 "3번 슬라이드를 더 쉽게 바꿔 줘"처럼 이어서 요청하세요. 고쳐 가며 완성하는 것이 핵심입니다.</p>
+
+      <div class="sub-step">
+        <h3>비교 · 같은 주제, 프롬프트만 다릅니다</h3>
+        <div class="row"><button class="btn on" type="button" data-cmp="bad">한 줄만 쓴 프롬프트</button><button class="btn" type="button" data-cmp="good">5원칙으로 쓴 프롬프트</button></div>
+        <pre id="cmp-prompt"></pre>
+        <div class="mock"><span class="tagm">이런 결과가 나옵니다 (예시, 실제 출력은 조금씩 다릅니다)</span><div id="cmp-out"></div></div>
+      </div>
+    </div>
+    <div class="why">
+      <h3>왜 되나요</h3>
+      <ul>
+        <li><b>원인</b> AI는 모르는 것을 물어보지 않고 평균적인 답을 만듭니다. 그래서 짧게 시키면 누구에게나 맞는 밋밋한 결과가 나옵니다.</li>
+        <li><b>해소</b> 목적, 맥락, 역할, 형식을 먼저 알려 주면 AI가 맞출 기준이 생깁니다. 그리고 결과를 보며 고치면 됩니다.</li>
+      </ul>
+    </div>
+    <details><summary>한 걸음 더</summary><div>
+      <p class="small">완성된 구조를 "Apple 키노트 스타일로 10~12장, 경쟁사 비교 1장, 30일 실행 로드맵 1장 포함"처럼 구체화해 보세요.</p>
+    </div></details>
+  </article>
+
+  <article class="task" id="t3">
+    <div class="th">
+      <div class="badges"><span class="badge alt">추가학습</span></div>
+      <h2>엑셀 자료 검증 시스템 만들기</h2>
+      <p class="problem"><b>해소되는 문제</b>사람마다 다르게 입력한 자료를 하나하나 손으로 고치고 있습니다.</p>
+    </div>
+    <div class="lead">
+      <h3>결론 · 프롬프트로 정리 도구까지 만들 수 있습니다</h3>
+      <pre id="pr3">아래 표에서 날짜 형식, 금액 형식, 부서명 표기, 중복 행, 빈칸 오류를 찾아 정리하는 웹 도구(HTML 파일 하나)를 만들어 줘. 정리 전후 표를 나란히 보여 주고, 바뀐 칸은 색으로 표시해 줘.</pre>
+      <div class="row"><button class="btn sm" type="button" data-copy="#pr3">복사</button><span class="small muted" data-note></span></div>
+    </div>
+    <div class="try">
+      <h3>직접 해보기 · 결과물 미리 보기</h3>
+      <p class="small muted">위 프롬프트로 만들어지는 도구가 이런 모습입니다. 아래 버튼을 눌러 보세요. (샘플 자료는 가상입니다)</p>
+      <div class="row"><button class="btn primary" id="c-all" type="button">한 번에 정리하기</button><button class="btn" id="c-none" type="button">처음 상태로</button></div>
+      <div class="stats" id="c-stats"></div>
+      <p class="small muted" id="c-tip"></p>
+      <div class="grid2">
+        <div><h3 class="muted" style="margin-bottom:6px">정리 전</h3><div class="scroll" id="c-before"></div></div>
+        <div><h3 class="muted" style="margin-bottom:6px">정리 후</h3><div class="scroll" id="c-after"></div></div>
+      </div>
+      <div><h3 class="muted" style="margin-bottom:6px">부서별 집행액</h3><div class="bars" id="c-chart"></div></div>
+    </div>
+    <div class="why">
+      <h3>왜 되나요</h3>
+      <ul>
+        <li><b>원인</b> 같은 값도 사람마다 다르게 적습니다(날짜 2025.10.2 / 20251007, 금액 85만원 / 850,000). 그래서 합계와 집계가 틀어집니다.</li>
+        <li><b>해소</b> "무엇을 어떤 규칙으로 통일할지"만 정확히 적어 주면 AI가 그 규칙대로 처리하는 도구를 만들어 줍니다.</li>
+      </ul>
+    </div>
+    <details><summary>한 걸음 더</summary><div>
+      <div class="toggles" id="c-toggles"></div>
+      <p class="small muted">규칙을 하나씩 켜 보며 어떤 규칙이 무엇을 바꾸는지 확인하세요. 중복 삭제는 다른 규칙을 먼저 적용해야 잡힙니다.</p>
+      <p class="small">본인 AI에 위 프롬프트를 넣고 "금액을 천 단위 쉼표로 보여 줘"처럼 규칙을 하나 바꿔서 다시 만들어 보세요.</p>
+    </div></details>
+  </article>
+</section>
+
+<!-- ===== 3. 자동화 ===== -->
+<section class="panel" id="p-auto" role="tabpanel">
+  <article class="task" id="t4">
+    <div class="th">
+      <div class="badges"><span class="badge">필수</span></div>
+      <h2>100쪽 문서, 1분 요약</h2>
+      <p class="problem"><b>해소되는 문제</b>긴 자료를 끝까지 읽을 시간이 없습니다.</p>
+    </div>
+    <div class="lead">
+      <h3>결론 · 문서를 올리고 이렇게 물으면 됩니다</h3>
+      <pre id="pr4">우리 부서가 올해 꼭 챙겨야 할 핵심 변화 3가지만 뽑아 줘. 항목마다 근거가 나온 쪽수를 함께 달아 줘.</pre>
+      <div class="row"><button class="btn sm" type="button" data-copy="#pr4">복사</button><span class="small muted" data-note></span></div>
+    </div>
+    <div class="try">
+      <h3>직접 해보기 · 완료한 단계를 눌러 표시하세요</h3>
+      <ul class="chk" id="nb"></ul>
+      <div class="mock"><span class="tagm">이런 결과가 나옵니다 (형식 예시)</span>
+        <div>① 핵심 변화 첫 번째 … <b>[1]</b></div>
+        <div>② 핵심 변화 두 번째 … <b>[2]</b></div>
+        <div>③ 핵심 변화 세 번째 … <b>[3]</b></div>
+        <div class="muted small">대괄호 번호를 누르면 원문의 해당 부분으로 이동합니다.</div>
+      </div>
+    </div>
+    <div class="why">
+      <h3>왜 되나요</h3>
+      <ul>
+        <li><b>원인</b> 일반 AI는 인터넷에서 배운 지식으로 답하기 때문에, 내 문서의 내용과 섞이거나 지어낼 수 있습니다.</li>
+        <li><b>해소</b> NotebookLM은 내가 올린 문서만 근거로 답하고 출처 번호를 달아 줍니다. 그래서 4번 단계처럼 출처를 눌러 확인할 수 있습니다.</li>
+      </ul>
+    </div>
+    <details><summary>한 걸음 더</summary><div>
+      <p class="small">"이 내용을 3분 발표용 슬라이드 구성으로 만들어 줘" 또는 화면 오른쪽의 「슬라이드 자료」 기능을 써 보세요.</p>
+      <pre id="pr4b">이 문서에서 임원에게 보고할 내용을 5줄 이내 개조식으로 정리해 줘. 숫자가 나오는 문장은 쪽수를 꼭 달아 줘.</pre>
+      <div class="row"><button class="btn sm" type="button" data-copy="#pr4b">복사</button><span class="small muted" data-note></span></div>
+    </div></details>
+  </article>
+
+  <article class="task" id="t5">
+    <div class="th">
+      <div class="badges"><span class="badge">필수</span></div>
+      <h2>비 오면 알아서 알려주는 알림 만들기</h2>
+      <p class="problem"><b>해소되는 문제</b>행사나 훈련 일정마다 날씨를 직접 찾아보고 있습니다.</p>
+    </div>
+    <div class="lead">
+      <h3>결론 · 데이터를 연결하고 조건만 정하면 문구가 자동으로 나옵니다</h3>
+      <pre id="pr5">강수확률이 60% 이상이면 야외 행사 조정 안내문을 3줄로 작성해 줘. 날짜, 장소, 연락처는 빈칸으로 남겨 줘.</pre>
+      <div class="row"><button class="btn sm" type="button" data-copy="#pr5">복사</button><span class="small muted" data-note></span></div>
+    </div>
+    <div class="try">
+      <h3>직접 해보기</h3>
+      <div class="sub-step">
+        <h3>1 / 3 · 지역을 고르고 실시간 날씨를 불러오세요</h3>
+        <div class="row">
+          <select id="w-city" aria-label="지역"></select>
+          <button class="btn primary" id="w-load" type="button">날씨 불러오기</button>
+          <span class="chip" id="w-src">아직 불러오지 않음</span>
+        </div>
+        <div class="days" id="w-days"></div>
+      </div>
+      <div class="sub-step">
+        <h3>2 / 3 · 조건을 정하세요</h3>
+        <div class="row"><span>강수확률이</span><input type="range" id="w-th" min="10" max="90" step="10" value="60" aria-label="강수확률 기준"><b class="mono" id="w-thv">60%</b><span>이상이면 알림</span></div>
+      </div>
+      <div class="sub-step">
+        <h3>3 / 3 · 자동으로 만들어진 알림문</h3>
+        <div class="alerts" id="w-alerts"></div>
+        <div class="row"><button class="btn sm" id="w-copy" type="button">알림문 복사</button><span class="small muted" id="w-note"></span></div>
+      </div>
+      <details><summary>이게 "API 연결"입니다</summary><div>
+        <p class="small">API는 프로그램끼리 데이터를 주고받는 창구입니다. 아래 주소 하나를 부르면 날씨 데이터가 돌아옵니다. 이 데이터를 규칙(조건)에 넣으면 알림이 자동으로 만들어집니다.</p>
+        <pre id="w-url"></pre>
+        <p class="small muted">공개 날씨 서비스 Open-Meteo를 사용합니다. 회원가입이나 키가 필요 없습니다. 연결이 안 되는 환경에서는 샘플 데이터로 자동 전환됩니다.</p>
+      </div></details>
+    </div>
+    <div class="why">
+      <h3>왜 되나요</h3>
+      <ul>
+        <li><b>원인</b> 날씨 같은 변하는 정보는 사람이 매번 찾아서 옮겨 적어야 합니다.</li>
+        <li><b>해소</b> API로 데이터를 직접 받아오고, 조건(IF)에 맞으면 할 일(알림)을 정해 두면 같은 일이 자동으로 반복됩니다. 문구 작성은 AI가 맡을 수 있습니다.</li>
+      </ul>
+    </div>
+    <details><summary>한 걸음 더</summary><div>
+      <pre id="pr5b">매일 아침 8시에 우리 지역 날씨를 확인해서, 강수확률이 60% 이상일 때만 메신저로 알림을 보내는 자동화를 만들려고 해. 코딩을 모르는 사람 기준으로 단계별 방법을 알려 줘.</pre>
+      <div class="row"><button class="btn sm" type="button" data-copy="#pr5b">복사</button><span class="small muted" data-note></span></div>
+    </div></details>
+  </article>
+</section>
+
+<footer class="foot">ⓒ 2026 김철재 · 국방대학교 직무연수 강의용 자료(강사 개인 제작)입니다. 개인 학습 외 목적(복제·외부 배포·게시·상업적 이용)의 사용을 금합니다. 실제 업무 자료·개인정보·군사보안 사항은 입력하지 마세요. AI 결과는 부정확할 수 있으며, 활용 책임은 이용자에게 있습니다.</footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
+function store(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k));localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}}
+
+/* ================= 소재 (매 회차 여기만 고칩니다) ================= */
+var CONTENT={
+  cards:[
+    {t:"공개된 보도자료를 요약해 달라고 요청한다.",ok:true,why:"공개된 자료라 입력해도 됩니다."},
+    {t:"부대원 실명이 들어 있는 인원 현황 엑셀을 그대로 올린다.",ok:false,why:"실명 등 개인정보가 있어 입력 금지입니다. 이름을 지우거나 가상 자료로 바꿔서 쓰세요."},
+    {t:"내가 쓴 인사말(민감한 내용 없음)을 다듬어 달라고 한다.",ok:true,why:"민감한 내용이 없으니 괜찮습니다."},
+    {t:"비공개 업무 계획 문서를 파일로 첨부한다.",ok:false,why:"비공개·내부 문서는 입력 금지입니다. 입력한 내용은 저장되거나 학습에 쓰일 수 있습니다."},
+    {t:"동료 연락처와 주민등록번호가 적힌 명단을 붙여넣는다.",ok:false,why:"개인정보는 어떤 경우에도 입력 금지입니다."}
+  ],
+  sentences:[
+    {t:"교육 대상은 A부서 25명, B부서 20명, C부서 15명으로 총 70명이다.",err:"25 + 20 + 15 = 60명입니다. 합계가 틀렸습니다. AI는 숫자를 나열해 놓고도 합계를 틀립니다."},
+    {t:"교육은 2026년 2월 30일에 시작되었다.",err:"2월에는 30일이 없습니다. 달력에 없는 날짜입니다."},
+    {t:"설문 응답자 50명 중 40명이 만족하여 만족도는 80%였다."},
+    {t:"교육은 회당 3시간씩 총 4회 진행되었다."},
+    {t:"하반기에 같은 교육을 한 번 더 진행할 계획이다."}
+  ],
+  hints:[
+    "숫자와 날짜가 들어간 문장부터 의심해 보세요.",
+    "합계는 직접 더해 보고, 날짜는 달력에 있는 날인지 확인하세요."
+  ],
+  source:[["대상","A부서 25명 · B부서 20명 · C부서 15명"],["시작일","2026년 2월 2일"],["설문","응답 50명 중 만족 40명"],["운영","회당 3시간 · 총 4회"],["계획","하반기 1회 추가 진행"]],
+  bias:{
+    a:"{{김민수 주무관}}은 [[강한 추진력과 리더십]]으로 팀을 [[이끌었고]], 어려운 과제도 [[단호하게]] 해결했습니다.",
+    b:"{{김민지 주무관}}은 [[따뜻한 배려심]]으로 팀 [[분위기를 살렸고]], 맡은 일을 [[꼼꼼하게 도왔습니다]]."
+  },
+  planner:{
+    badPrompt:"AI@Home 기획서 써 줘.",
+    badOut:"AI@Home은 인공지능을 활용한 스마트홈입니다. 집을 편리하고 안전하게 만들어 줍니다. 앞으로 더 발전할 것으로 기대됩니다.",
+    goodOut:"1. 표지  2. 왜 필요한가  3. AI@Home이란  4. 핵심 기능 3가지  5. 현장 활용 사례  6. 기대 효과  7. 추진 일정  8. 1페이지 요약\n(슬라이드마다 제목 + 핵심 문장 3~4개)"
+  },
+  csv:[
+    "일자,부서,항목,금액,담당자",
+    "2025.10.2,총무과,사무용품 구입,\"1,200,000원\",김민수",
+    "2025-10-02,총무과 ,사무용품 구입,1200000,김민수",
+    "2025/10/05,인사 과,교육 강사료,\"₩ 850,000\",이서연",
+    "20251007,정보화담당,서버 유지보수,\"3,400,000원\",박지훈",
+    "2025. 10. 8.,총무,차량 정비,\"420,000\",최영호",
+    "25.10.09,정보화과,보안 소프트웨어,85만원,박지훈",
+    ",,,,",
+    "2025-10-10,인사과,채용 공고비,\"150,000원\",이서연",
+    "2025-10-13,정보화과 ,네트워크 장비,\"2,150,000원\",박지훈",
+    "2025-10-14,총무과,행사 다과비,,김민수",
+    "2025-10-15,총 무 과,청사 청소 용역,\"980,000원\",최영호",
+    "2025-10-09,정보화과,보안 소프트웨어,850000,박지훈"
+  ].join("\n"),
+  notebook:[
+    "LMS 자료실에서 「2024 한국인터넷백서」 PDF를 내려받습니다.",
+    "notebooklm.google.com에 접속해 구글 계정으로 로그인합니다.",
+    "PDF 파일을 화면으로 끌어다 놓고, 오른쪽 「소스 가이드」의 자동 요약을 확인합니다.",
+    "위 프롬프트를 붙여넣고, 답변의 번호를 눌러 원문과 맞는지 확인합니다. (검증)",
+    "오른쪽 「슬라이드 자료」를 눌러 발표 자료 초안을 만들어 봅니다."
+  ],
+  cities:[["논산 (국방대 인근)",36.19,127.10],["서울",37.57,126.98],["대전",36.35,127.38],["부산",35.18,129.08],["강릉",37.75,128.88],["제주",33.50,126.53]]
+};
+
+/* ================= 탭 ================= */
+var TABS=["verify","prompt","auto"];
+function showTab(){
+  var h=(location.hash||"").slice(1); if(TABS.indexOf(h)<0)h="verify";
+  TABS.forEach(function(t){
+    $("#p-"+t).classList.toggle("on",t===h);
+    $('[data-tab="'+t+'"]').setAttribute("aria-selected",t===h?"true":"false");
+  });
+}
+window.addEventListener("hashchange",showTab); showTab();
+
+/* ================= 복사 ================= */
+function copyText(text,note){
+  function done(ok){ if(note){note.textContent=ok?"복사했습니다. Gemini에 붙여넣으세요.":"복사하지 못했습니다. 글을 직접 선택해 복사하세요."} }
+  function fallback(){
+    var ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();
+    var ok=false;try{ok=document.execCommand("copy")}catch(e){}
+    document.body.removeChild(ta);done(ok);
+  }
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(function(){done(true)},fallback)}else fallback();
+}
+document.addEventListener("click",function(e){
+  var b=e.target.closest("[data-copy]"); if(!b)return;
+  var src=$(b.getAttribute("data-copy")); if(!src)return;
+  copyText(src.textContent,b.parentNode.querySelector("[data-note]"));
+});
+
+/* ================= 1. 검증 ================= */
+// 1-1 사용기준 카드
+var cardDone={},cardScore=0;
+$("#cards").innerHTML=CONTENT.cards.map(function(c,i){
+  return '<div class="qcard" data-c="'+i+'"><div>'+esc(c.t)+'</div><div class="row"><button type="button" class="btn sm" data-a="1">입력해도 됨</button><button type="button" class="btn sm" data-a="0">입력 금지</button></div><div class="res" hidden></div></div>';
+}).join("");
+$("#cards").addEventListener("click",function(e){
+  var b=e.target.closest("[data-a]"); if(!b)return;
+  var el=b.closest("[data-c]"),i=+el.getAttribute("data-c"); if(cardDone[i])return;
+  cardDone[i]=true;
+  var c=CONTENT.cards[i],right=(b.getAttribute("data-a")==="1")===c.ok;
+  if(right)cardScore++;
+  el.classList.add("done",right?"ok":"no");
+  var r=$(".res",el); r.hidden=false; r.className="res "+(right?"ok":"no"); r.textContent=(right?"정답. ":"다시 생각해 보세요. ")+c.why;
+  $$("button",el).forEach(function(x){x.disabled=true});
+  $("#card-score").textContent=cardScore+" / "+CONTENT.cards.length+" 맞힘";
+});
+
+// 1-2 거짓 문장 찾기
+var flagged={},submitted=false,hintN=0;
+function renderDoc(){
+  var html="";
+  CONTENT.sentences.forEach(function(s,i){
+    var cls="s";
+    if(!submitted){ if(flagged[i])cls+=" flag"; }
+    else if(s.err&&flagged[i])cls+=" hit"; else if(s.err)cls+=" miss"; else if(flagged[i])cls+=" fp";
+    html+='<div><button type="button" class="'+cls+'" data-s="'+i+'"'+(submitted?" disabled":"")+' aria-pressed="'+(!!flagged[i])+'">'+esc(s.t)+'</button>';
+    if(submitted){
+      if(s.err)html+='<span class="why-s"><b>'+(flagged[i]?"찾았습니다. ":"놓쳤습니다. ")+'</b>'+esc(s.err)+'</span>';
+      else if(flagged[i])html+='<span class="why-s okc"><b>정상 문장입니다. </b>원자료와 일치합니다.</span>';
+    }
+    html+='</div>';
+  });
+  $("#doc").innerHTML=html;
+  $("#g-submit").disabled=submitted;
+}
+function renderHints(){
+  var h=CONTENT.hints.slice(0,hintN).map(function(t,i){return '<li><b>힌트 '+(i+1)+'</b> '+esc(t)+'</li>'}).join("");
+  if(hintN>CONTENT.hints.length){
+    h+='<li><b>힌트 '+(CONTENT.hints.length+1)+' · 원자료</b><dl class="srcbox" style="margin-top:6px">'+CONTENT.source.map(function(r){return '<dt>'+esc(r[0])+'</dt><dd>'+esc(r[1])+'</dd>'}).join("")+'</dl></li>';
+  }
+  $("#hints").innerHTML=h;
+  $("#hint-btn").disabled=hintN>CONTENT.hints.length;
+  $("#hint-btn").textContent=hintN===0?"힌트 보기":(hintN>CONTENT.hints.length?"힌트를 모두 봤습니다":"다음 힌트");
+}
+$("#doc").addEventListener("click",function(e){
+  var b=e.target.closest("[data-s]"); if(!b||submitted)return;
+  var i=b.getAttribute("data-s"); flagged[i]=!flagged[i]; renderDoc();
+});
+$("#hint-btn").addEventListener("click",function(){hintN++;renderHints()});
+$("#g-submit").addEventListener("click",function(){
+  submitted=true;
+  var total=0,hit=0,fp=0;
+  CONTENT.sentences.forEach(function(s,i){ if(s.err)total++; if(flagged[i]){ if(s.err)hit++; else fp++; } });
+  var r=$("#g-result"); r.hidden=false;
+  r.className="chip "+(hit===total&&fp===0?"hit":"warn");
+  r.textContent="찾은 오류 "+hit+" / "+total+(fp?" · 정상 문장을 의심 "+fp:"");
+  renderDoc();
+});
+$("#g-reset").addEventListener("click",function(){flagged={};submitted=false;hintN=0;$("#g-result").hidden=true;renderDoc();renderHints()});
+renderDoc();renderHints();
+
+// 1-3 편향 비교
+var biasPick={},biasDone=false;
+function biasHTML(txt,side){
+  var n=0;
+  return txt.replace(/\[\[(.+?)\]\]|\{\{(.+?)\}\}/g,function(m,b,d){
+    var id=side+(n++),word=b||d,kind=b?"1":"0";
+    return '<button type="button" class="s" data-b="'+id+'" data-k="'+kind+'" aria-pressed="false">'+esc(word)+'</button>';
+  });
+}
+function renderBias(){
+  $("#bias").innerHTML='<div><h3>결과 A</h3><div class="doc">'+biasHTML(CONTENT.bias.a,"a")+'</div></div><div><h3>결과 B</h3><div class="doc">'+biasHTML(CONTENT.bias.b,"b")+'</div></div>';
+}
+$("#bias").addEventListener("click",function(e){
+  var b=e.target.closest("[data-b]"); if(!b||biasDone)return;
+  var id=b.getAttribute("data-b"); biasPick[id]=!biasPick[id];
+  b.classList.toggle("flag",!!biasPick[id]); b.setAttribute("aria-pressed",!!biasPick[id]);
+});
+$("#b-submit").addEventListener("click",function(){
+  biasDone=true;
+  var tot=0,hit=0,fp=0;
+  $$("#bias [data-b]").forEach(function(b){
+    var biased=b.getAttribute("data-k")==="1",on=!!biasPick[b.getAttribute("data-b")];
+    b.classList.remove("flag"); b.disabled=true;
+    if(biased){tot++; if(on){hit++;b.classList.add("hit")}else b.classList.add("miss")}
+    else if(on)b.classList.add("fp");
+  });
+  var r=$("#b-result"); r.hidden=false; r.className="chip "+(hit===tot&&fp===0?"hit":"warn");
+  r.textContent="치우친 표현 "+hit+" / "+tot+" 찾음"+(fp?" · 중립 표현을 의심 "+fp:"");
+  $("#b-fix").hidden=false;
+});
+$("#b-reset").addEventListener("click",function(){biasPick={};biasDone=false;$("#b-result").hidden=true;$("#b-fix").hidden=true;renderBias()});
+renderBias();
+
+/* ================= 2-1. 기획서 프롬프트 빌더 ================= */
+function buildPrompt(){
+  var role=$("#pl-role").value,topic=$("#pl-topic").value.trim(),ctx=$("#pl-ctx").value.trim(),n=$("#pl-n").value;
+  var req=["PowerPoint 형태, 슬라이드 "+n+"장"];
+  if($("#pl-f1").checked)req.push("각 슬라이드: 제목 + 핵심 문장 3~4개");
+  if($("#pl-f2").checked)req.push("마지막에 '1페이지 요약' 포함");
+  if($("#pl-f3").checked)req.push("슬라이드마다 발표자가 말할 대본 한 줄");
+  req.push("발표하는 느낌으로 간결하게");
+  var p="너는 "+role+"야.\n[주제] "+(topic||"(주제를 입력하세요)")+"\n[상황] "+(ctx||"(상황을 입력하세요)")+"\n[요구사항]\n"+req.map(function(r){return "- "+r}).join("\n")+"\n바로 슬라이드 구조로 만들어 줘.";
+  $("#pr2").textContent=p;
+  $("#pl-chips").innerHTML=[["목적",!!topic],["맥락",!!ctx],["역할",true],["형식",true]].map(function(c){
+    return '<span class="chip '+(c[1]?"hit":"bad")+'">'+c[0]+(c[1]?" 있음":" 비어 있음")+'</span>';
+  }).join("");
+}
+["#pl-topic","#pl-ctx","#pl-role","#pl-n","#pl-f1","#pl-f2","#pl-f3"].forEach(function(s){$(s).addEventListener("input",buildPrompt);$(s).addEventListener("change",buildPrompt)});
+buildPrompt();
+function setCmp(k){
+  $$("[data-cmp]").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-cmp")===k)});
+  if(k==="bad"){ $("#cmp-prompt").textContent=CONTENT.planner.badPrompt; $("#cmp-out").textContent=CONTENT.planner.badOut; }
+  else { $("#cmp-prompt").textContent=$("#pr2").textContent; $("#cmp-out").textContent=CONTENT.planner.goodOut; $("#cmp-out").style.whiteSpace="pre-line"; }
+  if(k==="bad")$("#cmp-out").style.whiteSpace="normal";
+}
+$$("[data-cmp]").forEach(function(b){b.addEventListener("click",function(){setCmp(b.getAttribute("data-cmp"))})});
+setCmp("bad");
+
+/* ================= 2-2. 자료 정제 ================= */
+var RULES=[
+ {k:"trim",l:"앞뒤 공백 제거"},{k:"date",l:"날짜 형식 통일"},{k:"amt",l:"금액 숫자로 통일"},
+ {k:"dept",l:"부서명 통일"},{k:"blank",l:"빈 행 삭제"},{k:"dup",l:"중복 행 삭제"}
+];
+var on={}; RULES.forEach(function(r){on[r.k]=false});
+$("#c-toggles").innerHTML=RULES.map(function(r){return '<label><input type="checkbox" data-r="'+r.k+'"><span>'+esc(r.l)+'</span></label>'}).join("");
+function syncToggles(){$$("#c-toggles input").forEach(function(i){i.checked=!!on[i.getAttribute("data-r")]})}
+$("#c-toggles").addEventListener("change",function(e){var k=e.target.getAttribute("data-r");if(k){on[k]=e.target.checked;runClean()}});
+$("#c-all").addEventListener("click",function(){RULES.forEach(function(r){on[r.k]=true});syncToggles();runClean()});
+$("#c-none").addEventListener("click",function(){RULES.forEach(function(r){on[r.k]=false});syncToggles();runClean()});
+function parseCSV(t){
+  var rows=[],row=[],cell="",q=false;
+  for(var i=0;i<t.length;i++){
+    var c=t[i];
+    if(q){ if(c==='"'){ if(t[i+1]==='"'){cell+='"';i++} else q=false } else cell+=c; }
+    else if(c==='"')q=true; else if(c===","){row.push(cell);cell=""}
+    else if(c==="\n"||c==="\r"){ if(c==="\r"&&t[i+1]==="\n")i++; row.push(cell);rows.push(row);row=[];cell=""; }
+    else cell+=c;
+  }
+  if(cell!==""||row.length){row.push(cell);rows.push(row)}
+  return rows;
+}
+var ALIAS={"정보화담당":"정보화과","정보과":"정보화과","정보화":"정보화과","총무":"총무과","인사":"인사과"};
+function pad(n){n=String(n);return n.length<2?"0"+n:n}
+function normDate(s){
+  var t=s.trim(),m=t.match(/^(\d{4})\D*(\d{1,2})\D*(\d{1,2})\D*$/);
+  if(!m){m=t.match(/^(\d{2})\D+(\d{1,2})\D+(\d{1,2})\D*$/); if(m)m[1]="20"+m[1];}
+  if(!m)return s;
+  var mo=+m[2],d=+m[3]; if(mo<1||mo>12||d<1||d>31)return s;
+  return m[1]+"-"+pad(mo)+"-"+pad(d);
+}
+function normAmt(s){
+  var t=s.replace(/[\s₩원,]/g,""); if(t==="")return "";
+  var m=t.match(/^(\d+(?:\.\d+)?)만$/); if(m)return String(Math.round(parseFloat(m[1])*10000));
+  return /^\d+$/.test(t)?t:s;
+}
+function normDept(s){var t=s.replace(/\s+/g,"");return ALIAS[t]||t}
+function colKind(h){ if(/날짜|일자/.test(h))return "date"; if(/금액|비용|액$/.test(h))return "amt"; if(/부서|과$|팀$/.test(h))return "dept"; return ""; }
+var cleanOut={};
+function runClean(){
+  var raw=parseCSV(CONTENT.csv),head=raw[0],kinds=head.map(function(h){return colKind(h.trim())});
+  var body=raw.slice(1),stats={blank:0,dup:0,chg:0,na:0},seen={},out=[];
+  body.forEach(function(r){
+    while(r.length<head.length)r.push("");
+    var empty=r.every(function(c){return c.trim()===""});
+    if(empty&&on.blank){stats.blank++;return}
+    var cells=r.map(function(v,i){
+      var nv=v;
+      if(on.trim)nv=nv.trim();
+      if(on.date&&kinds[i]==="date")nv=normDate(nv);
+      if(on.amt&&kinds[i]==="amt")nv=normAmt(nv);
+      if(on.dept&&kinds[i]==="dept")nv=normDept(nv);
+      var ch=nv!==v; if(ch)stats.chg++;
+      var na=!empty&&nv.trim()===""&&kinds[i]==="amt"; if(na)stats.na++;
+      return {v:nv,ch:ch,na:na};
+    });
+    var key=cells.map(function(c){return c.v}).join("\u0001");
+    if(on.dup&&!empty){ if(seen[key]){stats.dup++;return} seen[key]=1; }
+    out.push(cells);
+  });
+  cleanOut={head:head,rows:out,kinds:kinds,raw:body};
+  renderClean(stats);
+}
+function tbl(head,rows,mark,num){
+  var h="<table><thead><tr>"+head.map(function(x,i){return '<th class="'+(num[i]?"num":"")+'">'+esc(x)+"</th>"}).join("")+"</tr></thead><tbody>";
+  rows.forEach(function(r){
+    h+="<tr>"+r.map(function(c,i){
+      var v=mark?c.v:c,cls=(num[i]?"num ":"")+"mono ";
+      if(mark&&c.ch)cls+="chg "; if(mark&&c.na){cls+="na ";v="(비어 있음)"}
+      return '<td class="'+cls+'">'+esc(v===""?" ":v)+"</td>";
+    }).join("")+"</tr>";
+  });
+  return h+"</tbody></table>";
+}
+function renderClean(stats){
+  var d=cleanOut,num=d.kinds.map(function(k){return k==="amt"});
+  $("#c-before").innerHTML=tbl(d.head,d.raw,false,num);
+  $("#c-after").innerHTML=tbl(d.head,d.rows,true,num);
+  $("#c-stats").innerHTML='<span class="chip">원본 '+d.raw.length+'행 → 정리 후 '+d.rows.length+'행</span><span class="chip warn">바뀐 칸 '+stats.chg+'</span><span class="chip">빈 행 삭제 '+stats.blank+'</span><span class="chip">중복 삭제 '+stats.dup+'</span><span class="chip '+(stats.na?"bad":"")+'">확인 필요 '+stats.na+'</span>';
+  var n=RULES.filter(function(r){return on[r.k]}).length;
+  $("#c-tip").textContent=n===0?"아직 아무것도 정리하지 않은 상태입니다. 「한 번에 정리하기」를 눌러 보세요.":(stats.na?"빨간 칸은 금액이 비어 있는 행입니다. AI가 임의로 채우지 않고 사람이 확인하도록 남겨 둡니다.":"");
+  var di=d.kinds.indexOf("dept"),ai=d.kinds.indexOf("amt"),box=$("#c-chart"),sums={};
+  d.rows.forEach(function(r){var dept=r[di].v.trim(),a=r[ai].v; if(dept===""||!/^\d+$/.test(a))return; sums[dept]=(sums[dept]||0)+Number(a)});
+  var keys=Object.keys(sums).sort(function(a,b){return sums[b]-sums[a]});
+  if(!keys.length){box.innerHTML='<p class="muted small">금액이 숫자로 정리되지 않아 합계를 낼 수 없습니다.</p>';return}
+  var max=sums[keys[0]];
+  box.innerHTML=keys.map(function(k){return '<div class="bar"><span class="l" title="'+esc(k)+'">'+esc(k)+'</span><span><i style="width:'+(sums[k]/max*100).toFixed(1)+'%"></i></span><span class="v">'+sums[k].toLocaleString("ko-KR")+'원</span></div>'}).join("");
+}
+runClean();
+
+/* ================= 3-1. NotebookLM 체크리스트 ================= */
+var nbState=store("kndu-nb")||{};
+$("#nb").innerHTML=CONTENT.notebook.map(function(t,i){
+  return '<li><label><input type="checkbox" data-n="'+i+'"'+(nbState[i]?" checked":"")+'><span><b>'+(i+1)+'.</b> '+esc(t)+'</span></label></li>';
+}).join("");
+$("#nb").addEventListener("change",function(e){var i=e.target.getAttribute("data-n"); if(i===null)return; nbState[i]=e.target.checked; store("kndu-nb",nbState)});
+
+/* ================= 3-2. 날씨 API 연결 ================= */
+var wsel=$("#w-city");
+wsel.innerHTML=CONTENT.cities.map(function(c,i){return '<option value="'+i+'">'+esc(c[0])+'</option>'}).join("");
+var days=[],srcLabel="";
+function fmtDate(iso){var p=iso.split("-");return +p[1]+"월 "+(+p[2])+"일"}
+function sampleDays(){
+  var out=[],pr=[20,70,45],hi=[18,15,19],lo=[8,9,7];
+  for(var i=0;i<3;i++){var d=new Date();d.setDate(d.getDate()+i);out.push({date:d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()),p:pr[i],hi:hi[i],lo:lo[i]})}
+  return out;
+}
+function apiURL(){
+  var c=CONTENT.cities[+wsel.value];
+  return "https://api.open-meteo.com/v1/forecast?latitude="+c[1]+"&longitude="+c[2]+"&daily=precipitation_probability_max,temperature_2m_max,temperature_2m_min&timezone=Asia%2FSeoul&forecast_days=3";
+}
+function renderWeather(){
+  $("#w-url").textContent=apiURL();
+  var th=+$("#w-th").value; $("#w-thv").textContent=th+"%";
+  $("#w-days").innerHTML=days.map(function(d){
+    return '<div class="day'+(d.p>=th?" hot":"")+'"><span class="small muted">'+fmtDate(d.date)+'</span><span class="big">'+d.p+'%</span><span class="small">강수확률 · 최고 '+d.hi+'° / 최저 '+d.lo+'°</span></div>';
+  }).join("");
+  var city=CONTENT.cities[+wsel.value][0].replace(/ \(.*\)/,"");
+  var hot=days.filter(function(d){return d.p>=th});
+  window.__alertText=hot.map(function(d){return "[기상 알림] "+fmtDate(d.date)+" "+city+" 강수확률 "+d.p+"%입니다. 야외 일정은 우천 대비(실내 전환, 우의 준비) 계획을 확인해 주시기 바랍니다."}).join("\n");
+  $("#w-alerts").innerHTML=hot.length?hot.map(function(d,i){return '<div class="alert">'+esc(window.__alertText.split("\n")[i])+'</div>'}).join(""):'<div class="muted small">기준에 해당하는 날이 없어 알림이 만들어지지 않았습니다. 기준을 낮춰 보세요.</div>';
+  $("#w-copy").disabled=!hot.length;
+  $("#w-src").textContent=srcLabel; $("#w-src").className="chip "+(srcLabel.indexOf("실시간")===0?"hit":"warn");
+}
+function loadWeather(){
+  $("#w-src").textContent="불러오는 중…"; $("#w-src").className="chip";
+  var ctl=("AbortController" in window)?new AbortController():null,timer=setTimeout(function(){if(ctl)ctl.abort()},6000);
+  fetch(apiURL(),ctl?{signal:ctl.signal}:{}).then(function(r){if(!r.ok)throw new Error("http");return r.json()}).then(function(j){
+    clearTimeout(timer);
+    var d=j.daily; days=d.time.map(function(t,i){return {date:t,p:Math.round(d.precipitation_probability_max[i]||0),hi:Math.round(d.temperature_2m_max[i]),lo:Math.round(d.temperature_2m_min[i])}});
+    srcLabel="실시간 · Open-Meteo"; renderWeather();
+  }).catch(function(){
+    clearTimeout(timer); days=sampleDays(); srcLabel="샘플 데이터 (연결 안 됨)"; renderWeather();
+  });
+}
+$("#w-load").addEventListener("click",loadWeather);
+wsel.addEventListener("change",function(){days=sampleDays();srcLabel="아직 불러오지 않음 (샘플 표시)";renderWeather()});
+$("#w-th").addEventListener("input",renderWeather);
+$("#w-copy").addEventListener("click",function(){
+  var n=$("#w-note"),t=window.__alertText||"";
+  function ok(){n.textContent="복사했습니다."}
+  function fb(){var ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");ok()}catch(e){n.textContent="복사하지 못했습니다."}document.body.removeChild(ta)}
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,fb);else fb();
+});
+days=sampleDays(); srcLabel="아직 불러오지 않음 (샘플 표시)"; renderWeather();
+})();
+</script>
+</body>
+</html>
