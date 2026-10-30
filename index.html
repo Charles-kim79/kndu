@@ -212,6 +212,16 @@ td.na{background:var(--bad-soft);color:var(--bad)}
 .paper table{width:100%;border-collapse:collapse;font-size:16px}
 .paper th,.paper td{border:1px solid #b9c2d3;padding:9px 12px;text-align:left;vertical-align:top;line-height:1.6}
 .paper th{background:#eef2f9;width:5.5em;font-weight:700;white-space:nowrap}
+.gm{display:flex;flex-direction:column;gap:12px;font-size:16px;line-height:1.75}
+.gm .org{text-align:center;font-size:clamp(22px,3.4vw,28px);font-weight:900;letter-spacing:.12em}
+.gm .ex{text-align:center;font-size:13px;color:#667085;margin-top:-8px}
+.gm table{width:100%;border-collapse:collapse;border-top:2px solid #1a1a1a;border-bottom:2px solid #1a1a1a}
+.gm th{width:4.5em;text-align:left;font-weight:700;padding:7px 8px;white-space:nowrap;background:none;border:0}
+.gm td{padding:7px 8px;border:0}
+.gm p{margin:0}
+.gm .sub{padding-left:1.6em;display:flex;flex-direction:column;gap:2px}
+.gm .end{margin-top:4px}
+.gm .from{text-align:center;font-size:20px;font-weight:900;letter-spacing:.2em;margin-top:10px}
 .live{display:inline-block;font-size:12px;font-weight:900;color:#fff;background:var(--c3);padding:1px 8px;border-radius:99px;margin-left:6px;vertical-align:1px}
 .live.off{background:#9aa5b8}
 .flash{animation:flash .9s}
@@ -455,29 +465,29 @@ td.na{background:var(--bad-soft);color:var(--bad)}
   </div>
 
   <div class="sub-step">
-    <div class="sh"><span class="tag">2. 문서에 연결</span><h3 class="sq">OO부대 체육대회 안내문의 날씨 칸이 실시간으로 채워집니다</h3></div>
+    <div class="sh"><span class="tag">2. 문서에 연결</span><h3 class="sq">공문 속 기상 예보가 실시간으로 채워집니다</h3></div>
     <div class="row"><span>강수확률</span><input type="range" id="w-th" min="10" max="90" step="10" value="60" aria-label="우천 판단 기준"><b class="mono" id="w-thv">60%</b><span>이상이면 실내 진행으로 전환</span></div>
     <div class="paper" id="paper"></div>
-    <p class="small muted">지역과 날짜를 바꿔 보세요. 표시된 <span class="live">실시간</span> 칸이 자동으로 바뀝니다. (가상의 예시 문서입니다)</p>
+    <p class="small muted">지역과 날짜를 바꿔 보세요. 표시된 <span class="live">실시간</span> 항목이 자동으로 바뀝니다. (가상의 예시 문서입니다)</p>
   </div>
 
   <div class="sub-step">
     <div class="sh"><span class="tag">3. 내 문서에 적용</span><h3 class="sq">프롬프트로 나만의 스마트 문서를 만듭니다</h3></div>
-    <pre id="pr5">OO부대 체육대회 안내문을 웹 문서(HTML 파일 하나)로 만들어 줘.
-- 실제 체육대회 안내문처럼 제목, 일시, 장소, 날씨, 진행 안내, 준비물, 유의사항, 문의처를 갖춰 줘. 부대 이름은 'OO부대'로만 쓰고, 대대 같은 편제나 '장병' 같은 표현은 쓰지 마.
+    <pre id="pr5">국방대학교 체육대회 개최 공문을 웹 문서(HTML 파일 하나)로 만들어 줘.
+- 정부 공문 서식으로 작성해 줘: 기관명, 수신, 제목, 본문(1. 관련 / 2. 개최 안내 — 가. 일시 나. 장소 다. 기상 예보 라. 진행 방식 마. 준비물), 붙임, 끝, 발신 명의 순서야. 대대 같은 편제나 '장병' 같은 표현은 쓰지 마. 직인과 실명은 넣지 말고 '(가상의 예시 문서)'라고 표시해 줘.
 - 일시(오늘부터 7일)와 지역(논산 36.19/127.10, 서울 37.57/126.98, 대전 36.35/127.38)을 고르게 해 줘.
-- 선택하면 Open-Meteo 날씨 API로 그날의 강수확률과 최고·최저 기온을 불러와 '날씨' 칸에 표시해 줘. 호출 주소 예: https://api.open-meteo.com/v1/forecast?latitude=36.19&longitude=127.10&daily=precipitation_probability_max,temperature_2m_max,temperature_2m_min&timezone=Asia%2FSeoul&forecast_days=7
-- 강수확률이 60% 이상이면 '진행 안내'가 '우천 예상: 실내 체육관에서 진행'으로, 아니면 '예정대로 운동장에서 진행'으로 자동으로 바뀌게 해 줘.
-- 표 형식으로 정리하고, 인터넷 연결이 안 되면 샘플 값을 보여 줘.</pre>
+- 선택하면 Open-Meteo 날씨 API로 그날의 강수확률과 최고·최저 기온을 불러와 '기상 예보' 항목에 표시해 줘. 호출 주소 예: https://api.open-meteo.com/v1/forecast?latitude=36.19&longitude=127.10&daily=precipitation_probability_max,temperature_2m_max,temperature_2m_min&timezone=Asia%2FSeoul&forecast_days=7
+- 강수확률이 60% 이상이면 '장소'와 '진행 방식'이 '실내 체육관 / 우천 예상: 실내 체육관에서 진행'으로, 아니면 '운동장 / 예정대로 운동장에서 진행'으로 자동으로 바뀌게 하고, 준비물에도 실내화(우천) 또는 모자(맑음)가 자동으로 반영되게 해 줘.
+- 인터넷 연결이 안 되면 샘플 값을 보여 줘.</pre>
     <div class="row"><button class="btn primary" type="button" data-copy="#pr5">프롬프트 복사</button><a class="btn" href="https://gemini.google.com/" target="_blank" rel="noopener">Gemini 열기</a><span class="small muted" data-note></span></div>
     <p class="small">일반 Word·한글 문서는 한 번 쓰면 값이 고정됩니다. 실시간으로 바뀌는 문서는 웹 문서(HTML)로 만듭니다. 날씨 외에 환율, 미세먼지 같은 공개 데이터도 같은 방식으로 연결합니다.</p>
   </div>
   <div class="sub-step">
     <div class="sh"><span class="tag">4. 파일로 저장</span><h3 class="sq">저장한 문서도 실시간으로 열립니다</h3></div>
     <ol class="steps">
-      <li>Gemini가 만든 문서의 코드를 복사해 메모장에 붙여넣고 <b>체육대회.html</b>로 저장합니다. Gemini 화면에 다운로드 버튼이 있으면 그것을 써도 됩니다.</li>
+      <li>Gemini가 만든 문서의 코드를 복사해 메모장에 붙여넣고 <b>체육대회공문.html</b>로 저장합니다. Gemini 화면에 다운로드 버튼이 있으면 그것을 써도 됩니다.</li>
       <li>저장한 파일을 더블클릭해, 인터넷이 연결된 브라우저로 엽니다.</li>
-      <li>날씨 칸이 실시간 값으로 채워지는지 확인합니다. 인터넷이 되지 않는 환경에서는 샘플 값이 표시됩니다.</li>
+      <li>기상 예보 항목이 실시간 값으로 채워지는지 확인합니다. 인터넷이 되지 않는 환경에서는 샘플 값이 표시됩니다.</li>
     </ol>
     <div class="scroll"><table class="cmp">
       <thead><tr><th>저장 형식</th><th>날씨 값</th></tr></thead>
@@ -864,13 +874,18 @@ function render5(flash){
   $("#w-raw").textContent=JSON.stringify({time:d,precipitation_probability_max:x.p,temperature_2m_max:x.hi,temperature_2m_min:x.lo},null,2)+(live?"":"\n(샘플 데이터)");
   var city=CONTENT.cities[+wcity.value][0].replace(/ \(.*\)/,"");
   var rain=x.p>=th,tag='<span class="live'+(live?"":" off")+'">'+(live?"실시간":"샘플")+'</span>';
-  $("#paper").innerHTML='<h4>OO부대 체육대회 안내</h4><table><tbody>'+
-    '<tr><th>일시</th><td>'+dateLabel(d)+' 09:00 집결</td></tr>'+
-    '<tr><th>장소</th><td>OO부대 '+(rain?"실내 체육관":"운동장")+'</td></tr>'+
-    '<tr><th>날씨</th><td id="p-w"><span class="wbig">강수확률 '+x.p+'%</span> · 최고 '+x.hi+'° / 최저 '+x.lo+'° '+tag+'</td></tr>'+
-    '<tr><th>진행</th><td id="p-r">'+(rain?'<span class="rain">우천 예상: 실내 체육관에서 진행합니다.</span>':'<span class="sun">예정대로 운동장에서 진행합니다.</span>')+' '+tag+'</td></tr>'+
-    '<tr><th>준비물</th><td>체육복, 개인 물병'+(rain?', 실내화':', 모자')+' '+tag+'</td></tr>'+
-    '</tbody></table><p style="text-align:center;color:#555;font-size:14px;margin:0">문의: OO부대 행정관실</p>';
+  $("#paper").innerHTML='<div class="gm"><div class="org">국방대학교</div><div class="ex">(가상의 예시 문서)</div>'+
+    '<table><tbody><tr><th>수신</th><td>각 부서(처)장</td></tr><tr><th>(경유)</th><td></td></tr><tr><th>제목</th><td><b>'+esc(CONTENT.year)+'년 체육대회 개최 알림</b></td></tr></tbody></table>'+
+    '<p>1. 관련: '+esc(CONTENT.year)+'년 연간 행사 계획</p>'+
+    '<p>2. 위 관련, 아래와 같이 체육대회를 개최하오니 참석하여 주시기 바랍니다.</p>'+
+    '<div class="sub">'+
+      '<p>가. 일시: '+dateLabel(d)+' 09:00</p>'+
+      '<p>나. 장소: '+(rain?'실내 체육관':'운동장')+' '+tag+'</p>'+
+      '<p id="p-w">다. 기상 예보: <b>강수확률 '+x.p+'%</b> · 최고 '+x.hi+'° / 최저 '+x.lo+'° '+tag+'</p>'+
+      '<p id="p-r">라. 진행 방식: '+(rain?'<span class="rain">우천 예상: 실내 체육관에서 진행</span>':'<span class="sun">예정대로 운동장에서 진행</span>')+' '+tag+'</p>'+
+      '<p>마. 준비물: 체육복, 개인 물병, '+(rain?'실내화':'모자')+' '+tag+'</p>'+
+    '</div>'+
+    '<p class="end">붙임: 참가 신청서 1부.　끝.</p><div class="from">OO처장</div></div>';
   var key=d+"|"+x.p+"|"+wcity.value+"|"+th;
   if(flash&&key!==lastKey){$$("#paper #p-w,#paper #p-r").forEach(function(e){e.classList.add("flash")})}
   lastKey=key;
