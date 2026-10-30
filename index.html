@@ -138,6 +138,16 @@ pre{margin:0;font-family:var(--font-mono);font-size:13.5px;line-height:1.65;whit
 .pbox>h4{font-size:15px;font-weight:900;color:var(--c)}
 
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.cards3{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.tcard{border:2px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--surface);display:flex;flex-direction:column;gap:8px;min-width:0}
+.tcard h4{font-size:16px;font-weight:900}
+.tcard h4 small{font-family:var(--font-mono);font-weight:400;font-size:13px;color:var(--muted);margin-left:6px}
+.tcard .ex{background:var(--cs);border-radius:10px;padding:8px 12px;font-size:14px;line-height:1.6}
+.tcard .ex b{color:var(--c);margin-right:6px}
+.opts{display:flex;gap:8px;flex-wrap:wrap}
+.rel{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:14px;color:var(--muted)}
+.rel a{font-size:14px;font-weight:700;color:var(--c);background:var(--cs);padding:2px 12px;border-radius:99px;text-decoration:none}
+.rel a:hover{text-decoration:underline}
 .qcard{border:2px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--surface);display:flex;flex-direction:column;gap:10px;min-width:0}
 .qcard.done.ok{border-color:var(--ok)} .qcard.done.no{border-color:var(--bad)}
 .res{font-size:14.5px;padding:6px 10px;border-radius:8px;animation:pop .25s}
@@ -255,13 +265,13 @@ td.na{background:var(--bad-soft);color:var(--bad)}
 <section class="mapbox" aria-label="AI 활용 3단계 체계도">
   <h2>AI 활용 3단계 · 번호를 눌러 이동하세요</h2>
   <div class="map" id="map"></div>
-  <div class="prog"><span id="prog-t">완료 0 / 5</span><div class="track"><div class="fill" id="prog-f"></div></div><button class="btn sm" id="prog-reset" type="button">진행 초기화</button></div>
+  <div class="prog"><span id="prog-t">완료 0 / 6</span><div class="track"><div class="fill" id="prog-f"></div></div><button class="btn sm" id="prog-reset" type="button">진행 초기화</button></div>
 </section>
 
 <div class="start">
   <b>시작 방법</b>
   <span><i>①</i><a href="https://gemini.google.com/" target="_blank" rel="noopener">gemini.google.com</a>에 구글 계정으로 로그인</span>
-  <span><i>②</i>1번부터 차례로 진행 (3번은 추가학습)</span>
+  <span><i>②</i>1번부터 차례로 진행 (4번은 추가학습)</span>
   <span><i>③</i>복사 → 붙여넣기 → 결과 확인</span>
 </div>
 
@@ -269,7 +279,36 @@ td.na{background:var(--bad-soft);color:var(--bad)}
 <article class="task" id="t1" data-lv="1">
   <div class="th">
     <span class="lvtag">1단계 <em>AI 이해와 검증</em></span>
-    <h2>1. AI 활용 기본기</h2>
+    <h2>1. AI 기술 체계</h2>
+    <p class="sub">AI 기술 15가지를 5묶음으로 한눈에 정리합니다</p>
+  </div>
+  <div class="goal"><dl>
+    <dt>핵심 개념</dt><dd>AI 기술은 규칙 기반에서 머신러닝, 딥러닝, 생성형 AI, AI 에이전트로 발전해 왔습니다. 기술마다 잘하는 일이 다릅니다.</dd>
+    <dt>가능해지는 것</dt><dd>업무 사례를 보고 어떤 AI 기술이 쓰였는지 구분합니다.</dd>
+  </dl></div>
+
+  <div class="sub-step">
+    <div class="sh"><span class="tag">기술 체계</span><h3 class="sq">AI 기술 15가지, 5묶음</h3></div>
+    <p class="inst">묶음을 눌러서 카드를 읽어 보세요.</p>
+    <div class="seg" id="gtabs"></div>
+    <p class="small muted" id="gline"></p>
+    <div class="cards3" id="gcards"></div>
+    <p class="small muted">※ 이해를 돕기 위한 교육용 분류이며, 학술적 분류와 일부 다를 수 있습니다.</p>
+  </div>
+
+  <div class="sub-step">
+    <div class="sh"><span class="tag">분류</span><h3 class="sq">이 사례는 어떤 기술일까요?</h3></div>
+    <p class="inst">사례마다 알맞은 기술을 고르세요.</p>
+    <div class="cards" id="tq"></div>
+    <div class="row"><span class="chip" id="tq-score">0 / 5 맞힘</span></div>
+  </div>
+</article>
+
+<!-- ===== 2 ===== -->
+<article class="task" id="t2" data-lv="1">
+  <div class="th">
+    <span class="lvtag">1단계 <em>AI 이해와 검증</em></span>
+    <h2>2. AI 활용 기본기</h2>
     <p class="sub">보안·프라이버시 · 환각·정확성 · 편향 — AI를 쓰기 전에 알아야 할 3가지 한계</p>
   </div>
   <div class="goal"><dl>
@@ -310,10 +349,10 @@ td.na{background:var(--bad-soft);color:var(--bad)}
 </article>
 
 <!-- ===== 2 ===== -->
-<article class="task" id="t2" data-lv="2">
+<article class="task" id="t3" data-lv="2">
   <div class="th">
     <span class="lvtag">2단계 <em>프롬프트 활용</em></span>
-    <h2>2. 기획서 프롬프트</h2>
+    <h2>3. 기획서 프롬프트</h2>
     <p class="sub">프롬프트 한 장으로 발표용 기획서의 구조와 디자인 방향까지</p>
   </div>
   <div class="goal"><dl>
@@ -358,10 +397,10 @@ td.na{background:var(--bad-soft);color:var(--bad)}
 </article>
 
 <!-- ===== 3 ===== -->
-<article class="task" id="t3" data-lv="2">
+<article class="task" id="t4" data-lv="2">
   <div class="th">
     <span class="lvtag">2단계 <em>프롬프트 활용 · 추가학습</em></span>
-    <h2>3. 엑셀 자료 검증 시스템 만들기</h2>
+    <h2>4. 엑셀 자료 검증 시스템 만들기</h2>
     <p class="sub">엑셀 오류를 파악하고, 프롬프트 한 장으로 정리 도구를 만든다</p>
   </div>
   <div class="goal"><dl>
@@ -412,10 +451,10 @@ td.na{background:var(--bad-soft);color:var(--bad)}
 </article>
 
 <!-- ===== 4 ===== -->
-<article class="task" id="t4" data-lv="3">
+<article class="task" id="t5" data-lv="3">
   <div class="th">
     <span class="lvtag">3단계 <em>업무 자동화</em></span>
-    <h2>4. 100쪽 문서 요약</h2>
+    <h2>5. 100쪽 문서 요약</h2>
     <p class="sub">NotebookLM — 내 문서만 근거로 답하는 AI</p>
   </div>
   <div class="goal"><dl>
@@ -438,10 +477,10 @@ td.na{background:var(--bad-soft);color:var(--bad)}
 </article>
 
 <!-- ===== 5 ===== -->
-<article class="task" id="t5" data-lv="3">
+<article class="task" id="t6" data-lv="3">
   <div class="th">
     <span class="lvtag">3단계 <em>업무 자동화</em></span>
-    <h2>5. API 연결</h2>
+    <h2>6. API 연결</h2>
     <p class="sub">문서에 실시간 데이터를 연동해 스스로 갱신되는 스마트 문서</p>
   </div>
   <div class="goal"><dl>
@@ -520,10 +559,40 @@ var CONTENT={
   instructor:"강사: 가톨릭대학교 융합전공학부 JA교수 김철재",
   year:"2026",
   levels:[
-    {n:1,step:"1단계",name:"AI 이해와 검증",can:"AI의 한계를 알고 결과를 검증합니다. 입력할 자료를 가려내고, 틀린 내용과 치우친 표현을 찾아냅니다.",tasks:[["t1","AI 활용 기본기"]]},
-    {n:2,step:"2단계",name:"프롬프트 활용",can:"말로 시켜서 결과물과 도구를 만듭니다. 기획서와 엑셀 정리 도구까지 가능합니다.",tasks:[["t2","기획서 프롬프트"],["t3","엑셀 검증 시스템 · 추가"]]},
-    {n:3,step:"3단계",name:"업무 자동화",can:"내 문서와 실시간 데이터를 AI에 연결합니다. 문서 요약부터 스스로 갱신되는 문서까지 가능합니다.",tasks:[["t4","문서 요약"],["t5","API 연결"]]}
+    {n:1,step:"1단계",name:"AI 이해와 검증",can:"AI 기술 체계를 이해하고, 한계를 알고 결과를 검증합니다. 입력할 자료를 가려내고, 틀린 내용과 치우친 표현을 찾아냅니다.",tasks:[["t1","AI 기술 체계"],["t2","AI 활용 기본기"]]},
+    {n:2,step:"2단계",name:"프롬프트 활용",can:"말로 시켜서 결과물과 도구를 만듭니다. 기획서와 엑셀 정리 도구까지 가능합니다.",tasks:[["t3","기획서 프롬프트"],["t4","엑셀 검증 시스템 · 추가"]]},
+    {n:3,step:"3단계",name:"업무 자동화",can:"내 문서와 실시간 데이터를 AI에 연결합니다. 문서 요약부터 스스로 갱신되는 문서까지 가능합니다.",tasks:[["t5","문서 요약"],["t6","API 연결"]]}
   ],
+  aiTech:[
+    {name:"AI 발전 단계",line:"사람이 규칙을 정하던 AI에서, 스스로 배우는 AI로 발전했습니다.",cards:[
+      {n:"규칙 기반",a:"Rule-based",c:"사람이 \"만약 ~하면 ~하라\"를 직접 정해 주는 방식입니다.",ex:"'긴급'이 들어간 메일이면 알림을 보낸다."},
+      {n:"머신러닝",a:"ML",c:"데이터를 보고 규칙을 스스로 찾아내는 방식입니다.",ex:"지난 민원과 처리 결과를 학습해 새 민원의 분류를 추천한다."},
+      {n:"딥러닝",a:"DL",c:"사람 뇌를 본뜬 신경망을 깊게 쌓아, 사진·음성처럼 복잡한 자료를 이해하는 방식입니다.",ex:"사진 속 얼굴을 알아보고, 음성을 글자로 바꾼다."}]},
+    {name:"학습 방식",line:"AI가 배우는 세 가지 방법입니다.",cards:[
+      {n:"지도학습",a:"Supervised",c:"정답이 붙은 자료로 배우는 방식입니다. 문제와 정답을 같이 보며 공부하는 것과 같습니다.",ex:"'스팸/정상'이 표시된 메일로 학습해 스팸을 걸러낸다."},
+      {n:"비지도학습",a:"Unsupervised",c:"정답 없이 자료의 비슷한 점을 스스로 찾는 방식입니다.",ex:"평소 접속 기록을 학습해, 평소와 다른 접속을 찾아낸다."},
+      {n:"강화학습",a:"RL",c:"잘하면 점수(보상)를 받으며 더 나은 방법을 찾아가는 방식입니다.",ex:"점수를 받아 가며 가장 빠른 배송 경로를 찾는다."}]},
+    {name:"딥러닝 모델",line:"자료의 종류에 맞춰 만든 신경망입니다.",cards:[
+      {n:"합성곱 신경망",a:"CNN",c:"사진·영상 속의 모양을 잘 알아보는 모델입니다.",ex:"CCTV 영상에서 침입자를 찾는다."},
+      {n:"순환 신경망",a:"RNN/LSTM",c:"시간 순서로 이어지는 자료를 기억하며 분석하는 모델입니다.",ex:"전력 사용량의 흐름을 보고 다음 달 사용량을 예측한다."},
+      {n:"트랜스포머",a:"Transformer",c:"문장 전체의 맥락을 한꺼번에 파악하는 모델입니다. ChatGPT·Gemini 같은 대화형 AI의 바탕입니다.",ex:"긴 문장을 읽고 요청의 의도를 파악한다."}]},
+    {name:"생성형·자율 AI",line:"만들어 내고, 함께 이해하고, 스스로 실행하는 AI입니다.",cards:[
+      {n:"생성형 AI",a:"Generative",c:"글·그림·코드를 새로 만들어 내는 AI입니다. 대표 모델이 대규모 언어모델(LLM)입니다.",ex:"보고서 초안을 작성한다."},
+      {n:"멀티모달 AI",a:"Multimodal",c:"글·사진·음성을 함께 이해하는 AI입니다.",ex:"사진을 보여 주고 \"이게 뭐야?\"라고 질문한다."},
+      {n:"AI 에이전트",a:"Agent",c:"목표를 주면 스스로 계획하고 도구를 골라 실행하는 AI입니다.",ex:"\"회의 자료 준비해 줘\" 한마디에 자료를 찾고 문서까지 만든다."}]},
+    {name:"실행 계층",line:"AI 계산을 어디에서 하는지에 따른 구분입니다.",cards:[
+      {n:"엣지 AI",a:"Edge",c:"현장 기기 안에서 바로 처리합니다. 인터넷이 없어도 즉시 반응하고, 자료가 밖으로 나가지 않습니다.",ex:"카메라가 영상을 서버로 보내지 않고 현장에서 바로 판단한다."},
+      {n:"클라우드 AI",a:"Cloud",c:"멀리 있는 대형 서버에서 처리합니다. 많은 자료를 모아 크게 계산하는 데 강합니다.",ex:"많은 자료를 서버에 모아 다음 달 수요를 예측한다."},
+      {n:"연합학습",a:"Federated",c:"자료는 각자 보관하고, 학습 결과만 모아 함께 똑똑해지는 방식입니다.",ex:"각 기관이 자료는 두고 학습 결과만 공유해 공용 AI를 개선한다."}]}
+  ],
+  techQuiz:[
+    {t:"'긴급'이라는 단어가 있는 메일이면 자동으로 알림을 보낸다.",opts:["규칙 기반","머신러닝","생성형 AI"],ans:0,why:"사람이 정한 조건(만약 ~하면 ~하라)대로만 움직이는 규칙 기반입니다."},
+    {t:"지난 민원과 처리 결과를 학습해서, 새 민원의 분류를 추천한다.",opts:["규칙 기반","머신러닝","생성형 AI"],ans:1,why:"자료에서 패턴을 스스로 찾아 학습하는 머신러닝입니다."},
+    {t:"민원 내용을 읽고 답변 초안을 새로 작성한다.",opts:["머신러닝","생성형 AI","엣지 AI"],ans:1,why:"글을 새로 만들어 내는 생성형 AI입니다."},
+    {t:"'회의 자료 준비해 줘' 한마디에 스스로 자료를 찾고 문서까지 만든다.",opts:["생성형 AI","AI 에이전트","연합학습"],ans:1,why:"목표를 이해하고 스스로 계획해 실행하는 AI 에이전트입니다."},
+    {t:"인터넷이 끊겨도 현장 카메라가 이상 상황을 바로 판단한다.",opts:["엣지 AI","클라우드 AI","연합학습"],ans:0,why:"기기 안에서 바로 처리하는 엣지 AI입니다."}
+  ],
+  related:{t2:[["생성형 AI",3]],t3:[["생성형 AI",3],["트랜스포머",2]],t4:[["생성형 AI",3]],t5:[["생성형 AI",3]],t6:[["클라우드 AI",4],["AI 에이전트",3]]},
   cards:[
     {t:"공개된 보도자료를 요약해 달라고 요청한다.",ok:true,why:"공개된 자료라 입력해도 됩니다."},
     {t:"부대원 실명이 들어 있는 인원 현황 엑셀을 그대로 올린다.",ok:false,why:"실명 등 개인정보가 있어 입력 금지입니다. 이름을 지우거나 가상 자료로 바꿔서 씁니다."},
@@ -597,7 +666,7 @@ $("#map").innerHTML=CONTENT.levels.map(function(l){
 }).join("");
 
 /* ================= 이동 · 진행 ================= */
-var TASKS=["t1","t2","t3","t4","t5"];
+var TASKS=["t1","t2","t3","t4","t5","t6"];
 var doneSet=store("kndu-done")||{};
 function paintDone(){
   var n=0;
@@ -636,12 +705,50 @@ document.addEventListener("click",function(e){
   var src=$(b.getAttribute("data-copy")); if(!src)return;
   copyText(src.textContent,b.parentNode.querySelector("[data-note]"));
   var t=b.closest(".task").id;
-  if(t==="t2"||t==="t3"||t==="t5")markDone(t);
+  if(t==="t3"||t==="t4"||t==="t6")markDone(t);
 });
 
-/* ================= 1. AI 활용 기본기 ================= */
+
+/* ================= 1. AI 기술 체계 ================= */
+var grp=0;
+function renderTech(){
+  var g=CONTENT.aiTech[grp];
+  $("#gtabs").innerHTML=CONTENT.aiTech.map(function(x,i){return '<button type="button" class="btn sm'+(i===grp?" on":"")+'" data-g="'+i+'">'+esc(x.name)+'</button>'}).join("");
+  $("#gline").textContent=(grp+1)+" / "+CONTENT.aiTech.length+" · "+g.line;
+  $("#gcards").innerHTML=g.cards.map(function(c){
+    return '<div class="tcard"><h4>'+esc(c.n)+'<small>'+esc(c.a)+'</small></h4><p>'+esc(c.c)+'</p><div class="ex"><b>예시</b>'+esc(c.ex)+'</div></div>';
+  }).join("");
+}
+$("#gtabs").addEventListener("click",function(e){var b=e.target.closest("[data-g]");if(!b)return;grp=+b.getAttribute("data-g");renderTech()});
+renderTech();
+var tqDone={},tqScore=0;
+$("#tq").innerHTML=CONTENT.techQuiz.map(function(q,i){
+  return '<div class="qcard" data-q="'+i+'"><div>'+esc(q.t)+'</div><div class="opts">'+q.opts.map(function(o,j){return '<button type="button" class="btn sm" data-o="'+j+'">'+esc(o)+'</button>'}).join("")+'</div><div class="res" hidden></div></div>';
+}).join("");
+$("#tq").addEventListener("click",function(e){
+  var b=e.target.closest("[data-o]"); if(!b)return;
+  var el=b.closest("[data-q]"),i=+el.getAttribute("data-q"); if(tqDone[i])return;
+  tqDone[i]=true;
+  var q=CONTENT.techQuiz[i],right=(+b.getAttribute("data-o")===q.ans);
+  if(right)tqScore++;
+  el.classList.add("done",right?"ok":"no");
+  var r=$(".res",el); r.hidden=false; r.className="res "+(right?"ok":"no"); r.textContent=(right?"정답. ":"다시 생각해 보세요. 정답은 「"+q.opts[q.ans]+"」입니다. ")+q.why;
+  $$("button",el).forEach(function(x){x.disabled=true});
+  $("#tq-score").textContent=tqScore+" / "+CONTENT.techQuiz.length+" 맞힘";
+  if(Object.keys(tqDone).length===CONTENT.techQuiz.length)markDone("t1");
+});
+/* 관련 AI 기술 표시 */
+Object.keys(CONTENT.related).forEach(function(t){
+  var th=$("#"+t+" .th"); if(!th)return;
+  var d=document.createElement("div"); d.className="rel";
+  d.innerHTML='<span>관련 AI 기술</span>'+CONTENT.related[t].map(function(r){return '<a href="#t1" data-grp="'+r[1]+'">'+esc(r[0])+'</a>'}).join("");
+  th.appendChild(d);
+});
+document.addEventListener("click",function(e){var a=e.target.closest("[data-grp]");if(a){grp=+a.getAttribute("data-grp");renderTech()}});
+
+/* ================= 2. AI 활용 기본기 ================= */
 var cardDone={},cardScore=0,gDone=false,bDone=false;
-function check1(){ if(Object.keys(cardDone).length===CONTENT.cards.length&&gDone&&bDone)markDone("t1") }
+function check1(){ if(Object.keys(cardDone).length===CONTENT.cards.length&&gDone&&bDone)markDone("t2") }
 $("#cards").innerHTML=CONTENT.cards.map(function(c,i){
   return '<div class="qcard" data-c="'+i+'"><div>'+esc(c.t)+'</div><div class="row"><button type="button" class="btn sm" data-a="1">입력해도 됨</button><button type="button" class="btn sm" data-a="0">입력 금지</button></div><div class="res" hidden></div></div>';
 }).join("");
@@ -849,7 +956,7 @@ var nbState=store("kndu-nb")||{};
 $("#nb").innerHTML=CONTENT.notebook.map(function(t,i){
   return '<li><label><input type="checkbox" data-n="'+i+'"'+(nbState[i]?" checked":"")+'><span><b>'+(i+1)+'.</b> '+esc(t)+'</span></label></li>';
 }).join("");
-function checkNb(){ var all=CONTENT.notebook.every(function(_,i){return nbState[i]}); if(all)markDone("t4") }
+function checkNb(){ var all=CONTENT.notebook.every(function(_,i){return nbState[i]}); if(all)markDone("t5") }
 $("#nb").addEventListener("change",function(e){var i=e.target.getAttribute("data-n"); if(i===null)return; nbState[i]=e.target.checked; store("kndu-nb",nbState); checkNb()});
 
 /* ================= 5. API 연결 · 스마트 문서 ================= */
